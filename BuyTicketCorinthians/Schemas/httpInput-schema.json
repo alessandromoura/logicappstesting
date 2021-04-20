@@ -1,0 +1,32 @@
+﻿{
+  "properties": {
+    "awayTeam": {
+      "type": "string",
+      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+    },
+    "customerName": {
+      "type": "string",
+      "minLength": 10
+    },
+    "date": {
+      "type": "string"
+    },
+    "homeTeam": {
+      "type": "string",
+      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+    },
+    "postTwitter": {
+      "type": "boolean"
+    },
+    "price": {
+      "type": "number"
+    }
+  },
+  "type": "object",
+  "required": [
+    "customerName",
+    "date",
+    "homeTeam",
+    "awayTeam"
+  ]
+}

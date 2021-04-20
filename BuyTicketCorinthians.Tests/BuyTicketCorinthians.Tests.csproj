@@ -140,8 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BadRequests.cs" />
-    <Compile Include="BasicRequests.cs" />
-    <Compile Include="InvalidReferenceData.cs" />
+    <Compile Include="GoodRequests.cs" />
     <Compile Include="Models\APIRequest.cs" />
     <Compile Include="Models\APIResponse.cs" />
     <Compile Include="Models\LogicAppsActionResponse.cs" />

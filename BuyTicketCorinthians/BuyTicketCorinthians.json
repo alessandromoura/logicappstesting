@@ -1,0 +1,265 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "metadata": {
+        "description": "Name of the Logic App."
+      }
+    },
+    "API_URL": {
+      "type": "string"
+    },
+    "connections_azuretables_externalid": {
+      "type": "String"
+    },
+    "logicAppLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "allowedValues": [
+        "[resourceGroup().location]",
+        "australiaeast",
+        "australiasoutheast",
+        "brazilsouth",
+        "centralus",
+        "eastasia",
+        "eastus",
+        "eastus2",
+        "japaneast",
+        "japanwest",
+        "northcentralus",
+        "northeurope",
+        "southcentralus",
+        "southeastasia",
+        "westeurope",
+        "westus"
+      ],
+      "metadata": {
+        "description": "Location of the Logic App."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[parameters('logicAppName')]",
+      "type": "Microsoft.Logic/workflows",
+      "location": "[parameters('logicAppLocation')]",
+      "tags": {
+        "displayName": "LogicApp"
+      },
+      "apiVersion": "2016-06-01",
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "operationOptions": "EnableSchemaValidation",
+              "inputs": {
+                "method": "POST",
+                "schema": {
+                  "properties": {
+                    "awayTeam": {
+                      "type": "string",
+                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+                    },
+                    "customerName": {
+                      "type": "string",
+                      "minLength": 10
+                    },
+                    "date": {
+                      "type": "string"
+                    },
+                    "homeTeam": {
+                      "type": "string",
+                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+                    },
+                    "postTwitter": {
+                      "type": "boolean"
+                    },
+                    "price": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "customerName",
+                    "date",
+                    "homeTeam",
+                    "awayTeam"
+                  ]
+                }
+              }
+            }
+          },
+          "actions": {
+            "Is_Corinthians": {
+              "actions": {
+                "Buy_Ticket": {
+                  "runAfter": {},
+                  "type": "Http",
+                  "inputs": {
+                    "body": {
+                      "Quantity": 0,
+                      "Team1": "",
+                      "Team2": ""
+                    },
+                    "method": "POST",
+                    "uri": "http://x.com"
+                  }
+                },
+                "Is_Buy_Ticket_200": {
+                  "actions": {
+                    "Log_Buy_Ticket_Success": {
+                      "runAfter": {},
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "body": {
+                          "AwayTeam": "@{triggerBody()?['AwayTeam']}",
+                          "Date": "@{triggerBody()?['Date']}",
+                          "HomeTeam": "@{triggerBody()?['HomeTeam']}",
+                          "PartitionKey": "Corinthians",
+                          "RowKey": "@{triggerBody()?['CustomerName']}",
+                          "Status": "Buy ticket success"
+                        },
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azuretables']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "/Tables/@{encodeURIComponent('TicketLog')}/entities"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Buy_Ticket": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Log_Buy_Ticket_Error": {
+                        "runAfter": {},
+                        "type": "ApiConnection",
+                        "inputs": {
+                          "body": {
+                            "AwayTeam": "@{triggerBody()?['AwayTeam']}",
+                            "Date": "@{triggerBody()?['Date']}",
+                            "HomeTeam": "@{triggerBody()?['HomeTeam']}",
+                            "PartitionKey": "Corinthians",
+                            "RowKey": "@{triggerBody()?['CustomerName']}",
+                            "Status": "Buy ticket error"
+                          },
+                          "host": {
+                            "connection": {
+                              "name": "@parameters('$connections')['azuretables']['connectionId']"
+                            }
+                          },
+                          "method": "post",
+                          "path": "/Tables/@{encodeURIComponent('TicketLog')}/entities"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "and": [
+                      {
+                        "equals": [
+                          "@body('Buy_Ticket')?['status']",
+                          200
+                        ]
+                      }
+                    ]
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Response": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Log_Error_Not_Corinthians": {
+                    "runAfter": {},
+                    "type": "ApiConnection",
+                    "inputs": {
+                      "body": {
+                        "AwayTeam": "@{triggerBody()?['AwayTeam']}",
+                        "Date": "@{triggerBody()?['Date']}",
+                        "HomeTeam": "@{triggerBody()?['HomeTeam']}",
+                        "PartitionKey": "NotCorinthians",
+                        "RowKey": "@{triggerBody()?['CustomerName']}",
+                        "Status": "Not a Corinthians game"
+                      },
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['azuretables']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/Tables/@{encodeURIComponent('TicketLog')}/entities"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@toLower(triggerBody()?['HomeTeam'])",
+                      "@toLower('Corinthians')"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@toLower(triggerBody()?['AwayTeam'])",
+                      "@toLower('Corinthians')"
+                    ]
+                  }
+                ]
+              },
+              "type": "If"
+            },
+            "Response": {
+              "runAfter": {},
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 202
+              }
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "azuretables": {
+                "connectionId": "[parameters('connections_azuretables_externalid')]",
+                "connectionName": "azuretables",
+                "id": "/subscriptions/9a351677-dd5f-4242-ac24-ca47976bf412/providers/Microsoft.Web/locations/australiaeast/managedApis/azuretables"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}

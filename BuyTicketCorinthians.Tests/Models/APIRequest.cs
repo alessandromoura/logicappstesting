@@ -8,8 +8,11 @@ namespace BuyTicketCorinthians.Tests.Models
 {
     class APIRequest
     {
-        public string HomeTeam { get; set; }
-        public string AwayTeam { get; set; }
+        public string homeTeam { get; set; }
+        public string awayTeam { get; set; }
+        public string customerName { get; set; }
+        public string date { get; set; }
+        public object postTwitter { get; set; }
+        public object price { get; set; }
     }
-
 }

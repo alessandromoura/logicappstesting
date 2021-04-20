@@ -17,7 +17,7 @@ using System.Net;
 namespace BuyTicketCorinthians.Tests
 {
     [TestClass]
-    public class BasicRequests: TestBase
+    public class GoodRequests: TestBase
     {
         
     }

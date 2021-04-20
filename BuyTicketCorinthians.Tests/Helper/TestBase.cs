@@ -45,29 +45,27 @@ namespace BuyTicketCorinthians.Tests.Helper
             /* Get local environment variables using powershell:
                Get-ChildItem -Path Env:AZURE*
                
-               Set local environment variables using Powershell:
-               [System.Environment]::SetEnvironmentVariable('AZURE_TENANT_ID','XXX')
-               [System.Environment]::SetEnvironmentVariable('AZURE_CLIENT_ID','YYY')
-               [System.Environment]::SetEnvironmentVariable('AZURE_CLIENT_SECRET','ZZZ')
-               [System.Environment]::SetEnvironmentVariable('AZURE_SUBSCRIPTION_ID','XYZ')
+               Set system or user environment variables using Powershell:
+               [System.Environment]::SetEnvironmentVariable('AZURE_TENANT_ID','XXX',[System.EnvironmentVariableTarget]::Machine|User)
+               [System.Environment]::SetEnvironmentVariable('AZURE_CLIENT_ID','YYY',[System.EnvironmentVariableTarget]::Machine)
+               [System.Environment]::SetEnvironmentVariable('AZURE_CLIENT_SECRET','ZZZ',[System.EnvironmentVariableTarget]::Machine)
+               [System.Environment]::SetEnvironmentVariable('AZURE_SUBSCRIPTION_ID','XYZ',[System.EnvironmentVariableTarget]::Machine)
             */
-            _tenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID");
-            _clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
-            _clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
-            _subscriptionId = Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID");
-            _environment = Environment.GetEnvironmentVariable("AZURE_ENVIRONMENT");
+            _tenantId = Environment.GetEnvironmentVariable("ACSUG_TENANT_ID");
+            _clientId = Environment.GetEnvironmentVariable("ACSUG_CLIENT_ID");
+            _clientSecret = Environment.GetEnvironmentVariable("ACSUG_CLIENT_SECRET");
+            _subscriptionId = Environment.GetEnvironmentVariable("ACSUG_SUBSCRIPTION_ID");
 
             if (string.IsNullOrEmpty(_tenantId) ||
                 string.IsNullOrEmpty(_clientId) ||
                 string.IsNullOrEmpty(_clientSecret) ||
-                string.IsNullOrEmpty(_subscriptionId) ||
-                string.IsNullOrEmpty(_environment))
+                string.IsNullOrEmpty(_subscriptionId))
             {
                 throw new Exception("authentication credentials are invalid!");
             }
 
-            _resourceGroupName = $"INTEGRATION_SERVICES_{_environment}";
-            _logicAppName = $"Int-Logic-UnconditionalOfferATS-{_environment}";
+            _resourceGroupName = $"ACSUG-LogicApps-Testing";
+            _logicAppName = $"lapp-buyticketcorinthians-dev";
 
             ServiceClientCredentials credentials = await GetCredentials(_tenantId, _clientId, _clientSecret);
             _client = new LogicManagementClient(credentials);
@@ -106,7 +104,9 @@ namespace BuyTicketCorinthians.Tests.Helper
             // Retrieve Logic App URI
             var url = await GetCallbackUrl(TRIGGER_NAME);
             var _httpClient = new HttpClient();
-            return new Uri(url.Body.Value.Replace("invoke", $"invoke/{opportunityId}"));
+            // Use the below when you have query parameters in the URL
+            //return new Uri(url.Body.Value.Replace("invoke", $"invoke/{anyparam}"));
+            return new Uri(url.Body.Value);
         }
 
         private async Task<AzureOperationResponse<WorkflowTriggerCallbackUrl>> GetCallbackUrl(string triggerName)
