@@ -43,3 +43,20 @@ steps:
       restoreSolution: BuyTicketCorinthians.Tests/BuyTicketCorinthians.Tests.csproj
       feedsToUse: select
       restoreDirectory: lapp-buyticketcorinthians-dev.IntegrationTests\packages
+  - task: VSBuild@1
+    displayName: Build Test
+    inputs:
+      solution: BuyTicketCorinthians.Tests/BuyTicketCorinthians.Tests.csproj
+      msBuildArgs: 'p/OutputPath=$(System.DefaultWorkingDirectory)'
+      platform: 'Any CPU'
+      configuration: 'Debug'
+  - task: VSTest@2
+    displayName: Execute Tests
+    inputs:
+      testAssemblyVer2: |
+        **\BuyTicketCorinthians.Tests.dll
+        !**\*TestAdapter.dll
+        !**\obj\**
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      platform: 'Any CPU'
+      configuration: 'Debug'
