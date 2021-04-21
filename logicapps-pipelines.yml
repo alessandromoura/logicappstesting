@@ -7,8 +7,8 @@ trigger:
 - main
 
 variables:
-  AZURE_TENANT_ID: '6a425d0d-58f2-4e36-8689-10002b2ec567'
-  AZURE_SUBSCRIPTION_ID: '6f4c2473-f8cb-4b18-8796-f4cf662c01fe'
+  ACSUG_TENANT_ID: '6a425d0d-58f2-4e36-8689-10002b2ec567'
+  ACSUG_SUBSCRIPTION_ID: '6f4c2473-f8cb-4b18-8796-f4cf662c01fe'
 
 pool:
   vmImage: windows-latest
@@ -23,8 +23,8 @@ steps:
     #    SecretsFilter: 'adoClientId,adoClientSecret'
     #    RunAsPreJob: false
   - bash: |
-            echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$('0eD2iTTYL2T-p__~1xO_XR0N.46k6XyfcI')"
-            echo "##vso[task.setvariable variable=AZURE_CLIENT_SECRET]$('6821c416-d52e-4b27-8ce4-9202fc3a24c4')"
+            echo "##vso[task.setvariable variable=ACSUG_CLIENT_ID]$('0eD2iTTYL2T-p__~1xO_XR0N.46k6XyfcI')"
+            echo "##vso[task.setvariable variable=ACSUG_CLIENT_SECRET]$('6821c416-d52e-4b27-8ce4-9202fc3a24c4')"
   - task: AzureResourceGroupDeployment@2
     displayName: BuyTicketCorinthians ARM Deploy
     inputs:
