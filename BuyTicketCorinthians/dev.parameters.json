@@ -6,7 +6,7 @@
       "value": "lapp-buyticketcorinthians-dev"
     },
     "API_URL": {
-      "value": "https://x.com"
+      "value": "https://prod-03.australiaeast.logic.azure.com:443/workflows/e068f34367444ef0b45f3ee0ab99dd36/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=HEHKdtwzOeH9bAOmzgHukiR_bk_h_jnOZ9peOQDTY2A"
     },
     "connections_azuretables_externalid": {
       "value": "/subscriptions/9a351677-dd5f-4242-ac24-ca47976bf412/resourceGroups/ACSUG-LogicApps-Testing/providers/Microsoft.Web/connections/azuretables"

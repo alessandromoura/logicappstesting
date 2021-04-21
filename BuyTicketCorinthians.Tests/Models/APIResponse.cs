@@ -9,6 +9,6 @@ namespace BuyTicketCorinthians.Tests.Models
     class APIResponse
     {
         public string message { get; set; }
-        public string status { get; set; }
+        public string mensagem { get; set; }
     }
 }

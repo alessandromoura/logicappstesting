@@ -2,7 +2,7 @@
   "properties": {
     "awayTeam": {
       "type": "string",
-      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo", "Chelsea" ]
     },
     "customerName": {
       "type": "string",
@@ -13,7 +13,7 @@
     },
     "homeTeam": {
       "type": "string",
-      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo", "Chelsea" ]
     },
     "postTwitter": {
       "type": "boolean"

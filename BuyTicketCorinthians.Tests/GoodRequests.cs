@@ -19,6 +19,22 @@ namespace BuyTicketCorinthians.Tests
     [TestClass]
     public class GoodRequests: TestBase
     {
-        
+        [TestMethod]
+        public async Task GoodRequest_Success()
+        {
+            // Create mock data to be tested
+            var request = new Models.APIRequest
+            {
+                homeTeam = "Corinthians",
+                awayTeam = "Chelsea",
+                customerName = "Alessandro Moura",
+                date = DateTime.Now.ToString("2012-12-16T21:00:00"),
+                postTwitter = false,
+                price = 150
+            };
+
+
+        }
+
     }
 }

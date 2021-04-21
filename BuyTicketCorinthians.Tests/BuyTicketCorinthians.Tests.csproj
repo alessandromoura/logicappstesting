@@ -139,7 +139,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BadRequests.cs" />
+    <Compile Include="SchemaBadRequest.cs" />
+    <Compile Include="WorkflowBadRequest.cs" />
     <Compile Include="GoodRequests.cs" />
     <Compile Include="Models\APIRequest.cs" />
     <Compile Include="Models\APIResponse.cs" />

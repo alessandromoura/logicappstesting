@@ -74,7 +74,7 @@
                   "properties": {
                     "awayTeam": {
                       "type": "string",
-                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo", "Chelsea" ]
                     },
                     "customerName": {
                       "type": "string",
@@ -85,7 +85,7 @@
                     },
                     "homeTeam": {
                       "type": "string",
-                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo" ]
+                      "enum": [ "Corinthians", "Palmeiras", "Sao Paulo", "Santos", "Flamengo", "Chelsea" ]
                     },
                     "postTwitter": {
                       "type": "boolean"
@@ -113,12 +113,12 @@
                   "type": "Http",
                   "inputs": {
                     "body": {
-                      "Quantity": 0,
-                      "Team1": "",
-                      "Team2": ""
+                      "Date": "@{triggerBody()['date']}",
+                      "Game": "@{triggerBody()['homeTeam']} vs @{triggerBody()['awayTeam']}",
+                      "Price": "@triggerBody()?['price']"
                     },
                     "method": "POST",
-                    "uri": "http://x.com"
+                    "uri": "[parameters('API_URL')]"
                   }
                 },
                 "Is_Buy_Ticket_200": {
@@ -132,7 +132,7 @@
                           "Date": "@{triggerBody()?['Date']}",
                           "HomeTeam": "@{triggerBody()?['HomeTeam']}",
                           "PartitionKey": "Corinthians",
-                          "RowKey": "@{triggerBody()?['CustomerName']}",
+                          "RowKey": "@{triggerBody()?['customerName']}_@{utcNow()}",
                           "Status": "Buy ticket success"
                         },
                         "host": {
@@ -147,7 +147,7 @@
                   },
                   "runAfter": {
                     "Buy_Ticket": [
-                      "Succeeded"
+                      "Succeeded","Failed"
                     ]
                   },
                   "else": {
@@ -161,8 +161,10 @@
                             "Date": "@{triggerBody()?['Date']}",
                             "HomeTeam": "@{triggerBody()?['HomeTeam']}",
                             "PartitionKey": "Corinthians",
-                            "RowKey": "@{triggerBody()?['CustomerName']}",
-                            "Status": "Buy ticket error"
+                            "RowKey": "@{triggerBody()?['customerName']}_@{utcNow()}",
+                            "Status": "Buy ticket error",
+                            "Message": "@{body('Buy_Ticket')?['message']}",
+                            "Message_PTBR": "@{body('Buy_Ticket')?['mensagem']}"
                           },
                           "host": {
                             "connection": {
@@ -172,6 +174,17 @@
                           "method": "post",
                           "path": "/Tables/@{encodeURIComponent('TicketLog')}/entities"
                         }
+                      },
+                      "Terminate": {
+                        "inputs": {
+                          "runStatus": "Failed"
+                        },
+                        "runAfter": {
+                          "Log_Buy_Ticket_Error": [
+                            "Succeeded"
+                          ]
+                        },
+                        "type": "Terminate"
                       }
                     }
                   },
@@ -241,7 +254,10 @@
               "type": "Response",
               "kind": "Http",
               "inputs": {
-                "statusCode": 202
+                "statusCode": 202,
+                "body": {
+                  "Message": "Request received and being processed. Check the storage for the final response"
+                }
               }
             }
           },

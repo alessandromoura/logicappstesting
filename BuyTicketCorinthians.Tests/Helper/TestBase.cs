@@ -92,20 +92,20 @@ namespace BuyTicketCorinthians.Tests.Helper
             }
         }
 
-        protected async Task<HttpResponseMessage> CallLogicApp<T>(T input, string opportunityId)
+        protected async Task<HttpResponseMessage> CallLogicApp<T>(T input, string someParam)
         {
             var requestContent = new StringContent(JsonSerializer.Serialize<T>(
                 input, SerializerOptions), Encoding.UTF8, "application/json");
-            return await _httpClient.PostAsync(await GetLogicAppUri(opportunityId), requestContent);
+            return await _httpClient.PostAsync(await GetLogicAppUri(someParam), requestContent);
         }
 
-        private async Task<Uri> GetLogicAppUri(string opportunityId)
+        private async Task<Uri> GetLogicAppUri(string someParam)
         {
             // Retrieve Logic App URI
             var url = await GetCallbackUrl(TRIGGER_NAME);
             var _httpClient = new HttpClient();
             // Use the below when you have query parameters in the URL
-            //return new Uri(url.Body.Value.Replace("invoke", $"invoke/{anyparam}"));
+            //return new Uri(url.Body.Value.Replace("invoke", $"invoke/{someParam}"));
             return new Uri(url.Body.Value);
         }
 

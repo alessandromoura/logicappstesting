@@ -17,10 +17,10 @@ using System.Linq.Expressions;
 namespace BuyTicketCorinthians.Tests
 {
     [TestClass]
-    public class BadRequests : TestBase
+    public class SchemaBadRequest : TestBase
     {
         [TestMethod]
-        public async Task BadRequest_Missing_RequiredFields_SimplerCode()
+        public async Task SchemaBadRequest_Missing_RequiredFields_SimplerCode()
         {
             var tenantId = Environment.GetEnvironmentVariable("ACSUG_TENANT_ID");
             var clientId = Environment.GetEnvironmentVariable("ACSUG_CLIENT_ID");
@@ -70,12 +70,12 @@ namespace BuyTicketCorinthians.Tests
         }
 
         [TestMethod]
-        public async Task BadRequest_Missing_RequiredFields()
+        public async Task SchemaBadRequest_Missing_RequiredFields()
         {
             // Create mock data to be tested
             var request = new Models.APIRequest();
 
-            await BadRequest_TestBase<Models.APIRequest>(
+            await SchemaBadRequest_TestBase<Models.APIRequest>(
                 request,
                 x => x.error.message.Contains("Required properties are missing from object") &&
                      x.error.message.Contains("customerName") &&
@@ -85,7 +85,7 @@ namespace BuyTicketCorinthians.Tests
         }
 
         [TestMethod]
-        public async Task BadRequest_WrongDataType_ExpectedBoolean()
+        public async Task SchemaBadRequest_WrongDataType_ExpectedBoolean()
         {
             // Create mock data to be tested
             var request = new Models.APIRequest
@@ -94,14 +94,14 @@ namespace BuyTicketCorinthians.Tests
             };
 
 
-            await BadRequest_TestBase<Models.APIRequest>(
+            await SchemaBadRequest_TestBase<Models.APIRequest>(
                 request,
                 x => x.error.message.Contains("Invalid type") &&
                      x.error.message.Contains("Expected Boolean but got "));
         }
 
         [TestMethod]
-        public async Task BadRequest_WrongDataType_ExpectedNumber()
+        public async Task SchemaBadRequest_WrongDataType_ExpectedNumber()
         {
             // Create mock data to be tested
             var request = new Models.APIRequest
@@ -110,14 +110,14 @@ namespace BuyTicketCorinthians.Tests
             };
 
 
-            await BadRequest_TestBase<Models.APIRequest>(
+            await SchemaBadRequest_TestBase<Models.APIRequest>(
                 request,
                 x => x.error.message.Contains("Invalid type") &&
                      x.error.message.Contains("Expected Number but got "));
         }
 
         [TestMethod]
-        public async Task BadRequest_MinimumLengthNotMet_CustomerName()
+        public async Task SchemaBadRequest_MinimumLengthNotMet_CustomerName()
         {
             // Create mock data to be tested
             var request = new Models.APIRequest
@@ -125,13 +125,13 @@ namespace BuyTicketCorinthians.Tests
                 customerName = "X"
             };
 
-            await BadRequest_TestBase<Models.APIRequest>(
+            await SchemaBadRequest_TestBase<Models.APIRequest>(
                 request,
                 x => x.error.message.Contains("String 'X' is less than minimum length of 10"));
         }
 
         [TestMethod]
-        public async Task BadRequest_NotInEnum_HomeTeam()
+        public async Task SchemaBadRequest_NotInEnum_HomeTeam()
         {
             // Create mock data to be tested
             var request = new Models.APIRequest
@@ -139,12 +139,12 @@ namespace BuyTicketCorinthians.Tests
                 homeTeam = "Invalid Team"
             };
 
-            await BadRequest_TestBase<Models.APIRequest>(
+            await SchemaBadRequest_TestBase<Models.APIRequest>(
                 request,
                 x => x.error.message.Contains("Value \"Invalid Team\" is not defined in enum."));
         }
 
-        private async Task BadRequest_TestBase<T>(T request, Func<Models.LogicAppsErrorResponse, bool> condition)
+        private async Task SchemaBadRequest_TestBase<T>(T request, Func<Models.LogicAppsErrorResponse, bool> condition)
         {
             // Call LogicApp
             var result = await CallLogicApp<T>(request, "any");
