@@ -37,7 +37,7 @@ steps:
       action: "Create Or Update Resource Group"
       resourceGroupName: ACSUG-LogicApps-Testing
       templateLocation: "Linked artifact"
-      csmFile: ${{logicAppsRoot}}/logicapptesting/BuyTicketCorinthians/BuyTicketCorinthians.json
-      csmParametersFile: ${{logicAppsRoot}}/logicapptesting/BuyTicketCorinthians/dev.parameters.json
+      csmFile: ${{variables.logicAppsRoot}}/logicapptesting/BuyTicketCorinthians/BuyTicketCorinthians.json
+      csmParametersFile: ${{variables.logicAppsRoot}}/logicapptesting/BuyTicketCorinthians/dev.parameters.json
       deploymentMode: "Incremental"
       deploymentName: BuyTicketCorinthians
