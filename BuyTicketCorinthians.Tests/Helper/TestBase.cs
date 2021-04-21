@@ -61,7 +61,7 @@ namespace BuyTicketCorinthians.Tests.Helper
                 string.IsNullOrEmpty(_clientSecret) ||
                 string.IsNullOrEmpty(_subscriptionId))
             {
-                throw new Exception("authentication credentials are invalid!");
+                throw new Exception($"authentication credentials are invalid! TenantId: {_tenantId}, SubscriptionId: {_subscriptionId}, ClientId: {_clientId}, ClientSecret: {_clientSecret}");
             }
 
             _resourceGroupName = $"ACSUG-LogicApps-Testing";

@@ -15,16 +15,16 @@ pool:
 
 steps:
   - checkout: self
-    #- task: AzureKeyVault@1
-    #  displayName: Getting credentials for the integration tests
-    #  inputs:
-    #    azureSubscription: ${{variables.subscription}}
-    #    KeyVaultName: ${{variables.keyVault}}
-    #    SecretsFilter: 'adoClientId,adoClientSecret'
-    #    RunAsPreJob: false
+  - task: AzureKeyVault@1
+    displayName: Getting credentials for the integration tests
+    inputs:
+      azureSubscription: serviceConnectionDevOps
+      KeyVaultName: kv-acsug-credentials-dev
+      SecretsFilter: 'adoClientId,adoClientSecret'
+      RunAsPreJob: false
   - bash: |
-            echo "##vso[task.setvariable variable=ACSUG_CLIENT_ID]$('281c97cf-9f68-4c25-8e10-66c3776935e1')"
-            echo "##vso[task.setvariable variable=ACSUG_CLIENT_SECRET]$('A4200cS4nQEm8mq.X~4FQPxZ-4If9_Q-N~')"
+            echo "##vso[task.setvariable variable=ACSUG_CLIENT_ID]$(adoClientId)"
+            echo "##vso[task.setvariable variable=ACSUG_CLIENT_SECRET]$(adoClientSecret)"
   - task: AzureResourceGroupDeployment@2
     displayName: BuyTicketCorinthians ARM Deploy
     inputs:
