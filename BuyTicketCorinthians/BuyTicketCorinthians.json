@@ -115,8 +115,7 @@
                     "body": {
                       "Date": "@{triggerBody()['date']}",
                       "Game": "@{triggerBody()['homeTeam']} vs @{triggerBody()['awayTeam']}",
-                      "Price": "@triggerBody()?['price']",
-                      "Test": "x"
+                      "Price": "@triggerBody()?['price']"
                     },
                     "method": "POST",
                     "uri": "[parameters('API_URL')]"
