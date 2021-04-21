@@ -47,7 +47,7 @@ steps:
     displayName: Build Test
     inputs:
       solution: lapp-buyticketcorinthians-dev.IntegrationTests/BuyTicketCorinthians.sln
-      msBuildArgs: 'p/OutputPath=$(System.DefaultWorkingDirectory)'
+      msBuildArgs: '/p:OutputPath=$(System.DefaultWorkingDirectory)'
       platform: 'Any CPU'
       configuration: 'Debug'
   - task: VSTest@2
