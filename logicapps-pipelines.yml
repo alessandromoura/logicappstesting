@@ -42,7 +42,7 @@ steps:
       command: restore
       restoreSolution: BuyTicketCorinthians.Tests/BuyTicketCorinthians.Tests.csproj
       feedsToUse: select
-      restoreDirectory: '(Build.SourcesDirectory)\lapp-buyticketcorinthians-dev.IntegrationTests\packages'
+      restoreDirectory: '$(Build.SourcesDirectory)\lapp-buyticketcorinthians-dev.IntegrationTests\packages'
   - task: VSBuild@1
     displayName: Build Test
     inputs:
