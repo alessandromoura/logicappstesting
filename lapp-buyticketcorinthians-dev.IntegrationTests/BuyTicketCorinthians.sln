@@ -9,7 +9,7 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "BuyTicketCorinthians", "..\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{B77A9147-FECF-4514-BCD4-B3BA58C4507A}"
 	ProjectSection(SolutionItems) = preProject
-		logicapps-pipeline.yml = logicapps-pipeline.yml
+		..\logicapps-pipelines.yml = ..\logicapps-pipelines.yml
 	EndProjectSection
 EndProject
 Global
