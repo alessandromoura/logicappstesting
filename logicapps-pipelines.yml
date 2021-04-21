@@ -40,13 +40,13 @@ steps:
     displayName: Restore packages
     inputs:
       command: restore
-      restoreSolution: BuyTicketCorinthians.Tests/BuyTicketCorinthians.Tests.csproj
+      restoreSolution: lapp-buyticketcorinthians-dev.IntegrationTests/BuyTicketCorinthians.sln
       feedsToUse: select
       restoreDirectory: lapp-buyticketcorinthians-dev.IntegrationTests\packages
   - task: VSBuild@1
     displayName: Build Test
     inputs:
-      solution: BuyTicketCorinthians.Tests/BuyTicketCorinthians.Tests.csproj
+      solution: lapp-buyticketcorinthians-dev.IntegrationTests/BuyTicketCorinthians.sln
       msBuildArgs: 'p/OutputPath=$(System.DefaultWorkingDirectory)'
       platform: 'Any CPU'
       configuration: 'Debug'
