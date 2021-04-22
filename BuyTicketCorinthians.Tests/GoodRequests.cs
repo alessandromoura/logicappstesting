@@ -20,6 +20,46 @@ namespace BuyTicketCorinthians.Tests
     public class GoodRequests: TestBase
     {
         [TestMethod]
+        public async Task NonHttpTrigger()
+        {
+            var tenantId = Environment.GetEnvironmentVariable("ACSUG_TENANT_ID");
+            var clientId = Environment.GetEnvironmentVariable("ACSUG_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("ACSUG_CLIENT_SECRET");
+            var subscriptionId = Environment.GetEnvironmentVariable("ACSUG_SUBSCRIPTION_ID");
+
+            // Get credentials
+            var context = new AuthenticationContext($"https://login.windows.net/{tenantId}");
+            var credentials = new ClientCredential(clientId, clientSecret);
+            var result = await context.AcquireTokenAsync("https://management.core.windows.net/", credentials);
+            string token = result.CreateAuthorizationHeader().Substring("Bearer ".Length);
+            var tokenCredentials = new TokenCredentials(token);
+
+            // Use Logic Apps Management
+            var logicAppsClient = new LogicManagementClient(tokenCredentials);
+            logicAppsClient.SubscriptionId = subscriptionId;
+
+            // Retrieve Logic Apps Uri
+            var xxx = logicAppsClient.WorkflowTriggers.Run("ACSUG-LogicApps-Testing", "lapp-nonhttptrigger-dev", "When_a_blob_is_added_or_modified_(properties_only)");
+
+            // Create mock data to be tested
+            var request = new Models.APIRequest
+            {
+                price = 0
+            };
+
+            // Serialize payload
+            var serializerOptions = new JsonSerializerOptions { IgnoreNullValues = true };
+            var requestContent = new StringContent(JsonSerializer.Serialize<Models.APIRequest>(
+                request, serializerOptions), Encoding.UTF8, "application/json");
+
+            /*var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync(new Uri(url.Body.Value), requestContent);
+
+            var responseContent = await response.Content.ReadAsStreamAsync();
+            var logicAppsResponse = await JsonSerializer.DeserializeAsync<Models.LogicAppsErrorResponse>(responseContent, serializerOptions);*/
+        }
+
+        [TestMethod]
         public async Task GoodRequest_Success()
         {
             // Create mock data to be tested
