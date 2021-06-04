@@ -257,7 +257,7 @@
               "inputs": {
                 "statusCode": 202,
                 "body": {
-                  "Message": "Request received and being processed. Check the storage for the final response"
+                  "Message": "Request received and being processed 2. Check the storage for the final response"
                 }
               }
             }
